@@ -1,0 +1,136 @@
+.profile-main {
+  flex: 1;
+  padding-bottom: var(--space-9);
+}
+
+.profile-container {
+  max-width: 560px;
+  padding-top: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.profile-title {
+  font-size: 1.6rem;
+}
+
+.profile-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.profile-identity {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.profile-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-name {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.profile-email {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  margin-top: 2px;
+}
+
+.profile-section-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+.saved-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.saved-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding-right: var(--space-2);
+}
+
+.saved-row-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  padding: 0 var(--space-4);
+  text-align: left;
+  border-radius: var(--radius-md);
+}
+
+.saved-row-main:hover {
+  background: var(--color-accent-soft);
+}
+
+.saved-row-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.saved-row-name {
+  font-weight: 600;
+  font-size: 0.96rem;
+}
+
+.saved-row-location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) 0;
+}
+
+.settings-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.settings-label svg {
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 640px) {
+  .profile-main {
+    padding-bottom: 88px;
+  }
+}

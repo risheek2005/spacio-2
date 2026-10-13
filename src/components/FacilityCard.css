@@ -1,0 +1,159 @@
+.facility-card-shell {
+  position: relative;
+  min-width: 0;
+}
+
+.facility-card-link {
+  position: relative;
+  min-height: 100%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  padding-top: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-base), border-color var(--transition-base), transform var(--transition-base);
+}
+
+.facility-card-link:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-accent-soft-border);
+  transform: translateY(-2px);
+}
+
+.facility-card-link:active {
+  transform: translateY(0);
+}
+
+.facility-card-link:focus-visible {
+  border-radius: var(--radius-lg);
+}
+
+.facility-card-icon {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.facility-card-header {
+  padding-right: 48px;
+}
+
+.facility-name {
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.facility-location {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.facility-card-status-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.facility-crowd-text {
+  color: var(--color-text-secondary);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.facility-amenities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.facility-amenities li {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  padding: 5px 11px;
+  border-radius: var(--radius-pill);
+}
+
+.facility-card-footer {
+  margin-top: auto;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.view-details-affordance {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--color-accent);
+}
+
+.facility-card-link:hover .view-details-affordance {
+  gap: 10px;
+}
+
+/* Fitts: 44x44 keeps the secondary action easy to hit without competing
+   with the large primary card target. */
+.save-btn {
+  position: absolute;
+  top: var(--space-5);
+  right: var(--space-5);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: color var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+  z-index: 2;
+}
+
+.save-btn:hover {
+  color: var(--status-closed-text);
+  border-color: var(--status-closed-dot);
+  background: var(--status-closed-bg);
+}
+
+.save-btn:active {
+  transform: scale(0.96);
+}
+
+.save-btn-active {
+  color: var(--status-closed-text);
+  border-color: var(--status-closed-dot);
+  background: var(--status-closed-bg);
+}
+
+@media (max-width: 640px) {
+  .facility-card-link {
+    padding: var(--space-5);
+  }
+
+  .save-btn {
+    top: var(--space-4);
+    right: var(--space-4);
+  }
+}
