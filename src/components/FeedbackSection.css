@@ -1,0 +1,185 @@
+/* =========================================================
+   FeedbackSection — US06
+   Matches the existing .details-section card pattern so the
+   feedback area looks like a natural continuation of the
+   Status / Details / Amenities layout.
+   ========================================================= */
+
+.feedback-section {
+  gap: var(--space-5);
+}
+
+/* ---- Star rating ---- */
+.feedback-stars-fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.feedback-stars {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.feedback-star {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  color: var(--color-border-strong);
+  transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.feedback-star:hover {
+  color: #E0A400;
+  transform: scale(1.15);
+}
+
+.feedback-star-filled {
+  color: #E0A400;
+}
+
+:root[data-theme='dark'] .feedback-star {
+  color: var(--color-border-strong);
+}
+
+:root[data-theme='dark'] .feedback-star:hover,
+:root[data-theme='dark'] .feedback-star-filled {
+  color: #F0C15C;
+}
+
+.feedback-rating-label {
+  margin-left: var(--space-2);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+/* ---- Comment field ---- */
+.feedback-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.feedback-field label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.feedback-field textarea {
+  min-height: 80px;
+  padding: var(--space-3) var(--space-4);
+  border: 1.5px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  resize: vertical;
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.feedback-field textarea:focus {
+  border-color: var(--color-accent);
+  box-shadow: var(--focus-ring);
+}
+
+.feedback-char-count {
+  align-self: flex-end;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+/* ---- Feedback status messages ---- */
+.feedback-message {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.feedback-success {
+  background: var(--status-open-bg);
+  color: var(--status-open-text);
+  border: 1px solid transparent;
+}
+
+.feedback-error {
+  background: var(--status-closed-bg);
+  color: var(--status-closed-text);
+  border: 1px solid transparent;
+}
+
+/* ---- Submit button ---- */
+.feedback-submit {
+  align-self: flex-start;
+}
+
+/* ---- Review list ---- */
+.feedback-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-5);
+}
+
+.feedback-list-heading {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+.feedback-entry {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.feedback-entry-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.feedback-entry-stars {
+  display: inline-flex;
+  gap: 2px;
+  color: #E0A400;
+}
+
+:root[data-theme='dark'] .feedback-entry-stars {
+  color: #F0C15C;
+}
+
+.feedback-entry-meta {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.feedback-entry-comment {
+  font-size: 0.92rem;
+  color: var(--color-text-secondary);
+  line-height: 1.55;
+}
+
+@media (max-width: 640px) {
+  .feedback-submit {
+    width: 100%;
+  }
+}

@@ -38,6 +38,7 @@ const defaultState = {
   savedFacilityIds: [],
   darkMode: false,
   notifications: true,
+  feedback: [], // [{ facilityId, rating, comment, userName, userEmail, timestamp }]
 };
 
 export function AppProvider({ children }) {
@@ -78,6 +79,26 @@ export function AppProvider({ children }) {
     const toggleDarkMode = () => setState((s) => ({ ...s, darkMode: !s.darkMode }));
     const toggleNotifications = () => setState((s) => ({ ...s, notifications: !s.notifications }));
 
+    const submitFeedback = ({ facilityId, rating, comment }) => {
+      setState((s) => ({
+        ...s,
+        feedback: [
+          ...s.feedback,
+          {
+            facilityId,
+            rating,
+            comment,
+            userName: s.user?.name || 'Anonymous',
+            userEmail: s.user?.email || '',
+            timestamp: Date.now(),
+          },
+        ],
+      }));
+    };
+
+    const getFeedbackForFacility = (facilityId) =>
+      state.feedback.filter((f) => f.facilityId === facilityId);
+
     return {
       user: state.user,
       isAuthenticated: Boolean(state.user),
@@ -90,6 +111,8 @@ export function AppProvider({ children }) {
       toggleDarkMode,
       notifications: state.notifications,
       toggleNotifications,
+      submitFeedback,
+      getFeedbackForFacility,
     };
   }, [state]);
 

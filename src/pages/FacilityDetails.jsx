@@ -16,6 +16,7 @@ import {
 import Navbar from '../components/Navbar';
 import StatusBadge from '../components/StatusBadge';
 import OccupancyBar from '../components/OccupancyBar';
+import FeedbackSection from '../components/FeedbackSection';
 import Button from '../components/Button';
 import { useApp } from '../context/AppContext';
 import { getFacilityById } from '../data/facilities';
@@ -141,6 +142,8 @@ export default function FacilityDetails() {
               })}
             </ul>
           </section>
+
+          <FeedbackSection facilityId={facility.id} facilityName={facility.name} />
 
           <p className="demo-note details-demo-note">
             Occupancy and status are demo data for this UI/UX project.
