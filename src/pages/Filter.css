@@ -1,0 +1,107 @@
+/* ── Filter / Search Page ── */
+
+.filter-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.filter-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-5) var(--page-pad) var(--sp-4);
+}
+
+.filter-back-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  color: var(--color-text);
+  flex-shrink: 0;
+  transition: background var(--transition-fast);
+}
+.filter-back-btn:hover { background: var(--color-sage-pale); }
+
+.filter-title {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 700;
+  flex: 1;
+}
+
+.filter-reset-btn {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 0.75rem; font-weight: 600;
+  color: var(--color-primary);
+  background: none; border: none; cursor: pointer;
+  padding: var(--sp-1) var(--sp-2);
+}
+.filter-reset-btn:hover { text-decoration: underline; }
+
+.filter-body {
+  flex: 1;
+  padding: 0 var(--page-pad) var(--sp-10);
+  overflow-y: auto;
+}
+
+.filter-section {
+  margin-bottom: var(--sp-6);
+}
+
+.filter-section-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--sp-3);
+}
+
+.filter-occ-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.filter-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--color-sage);
+  outline: none;
+  margin-bottom: var(--sp-2);
+}
+.filter-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+.filter-slider::-moz-range-thumb {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  cursor: pointer;
+  border: 2px solid #fff;
+}
+
+.filter-slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+}

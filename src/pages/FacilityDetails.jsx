@@ -1,42 +1,34 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-  ArrowLeft,
-  MapPin,
-  Clock,
-  Heart,
-  Wifi,
-  Snowflake,
-  BatteryCharging,
-  Armchair,
-  Dumbbell,
-  Shirt,
-  Droplet,
-  Check,
+  ArrowLeft, Heart, Clock, MapPin, Map,
+  Dumbbell, Activity, Lock, Droplets, Droplet,
+  Wifi, Wind, BatteryCharging, BookOpen, VolumeX,
+  PenLine, MonitorPlay, Printer, Monitor, Mic, Volume2,
+  Star,
 } from 'lucide-react';
-import Navbar from '../components/Navbar';
-import StatusBadge from '../components/StatusBadge';
-import OccupancyBar from '../components/OccupancyBar';
-import FeedbackSection from '../components/FeedbackSection';
-import Button from '../components/Button';
+import BottomNavigation from '../components/BottomNavigation';
 import { useApp } from '../context/AppContext';
 import { getFacilityById } from '../data/facilities';
 import './FacilityDetails.css';
 
-const AMENITY_ICONS = {
-  'Wi-Fi': Wifi,
-  AC: Snowflake,
-  Charging: BatteryCharging,
-  'Study Tables': Armchair,
-  Equipment: Dumbbell,
-  'Changing Room': Shirt,
-  'Water Station': Droplet,
+const ICON_MAP = {
+  Dumbbell, Activity, Lock, Droplets, Droplet,
+  Wifi, Wind, BatteryCharging, BookOpen, VolumeX,
+  PenLine, MonitorPlay, Printer, Monitor, Mic, Volume2,
+  Star,
 };
 
+function getOccupancyDescription(occ) {
+  if (occ < 30) return 'Room to move';
+  if (occ < 60) return 'Moderate activity';
+  if (occ < 80) return 'Getting busy';
+  return 'Very crowded';
+}
+
 /**
- * One reusable details layout for both Library and Gym.
- * The page is intentionally chunked into Status → Details → Amenities.
- * This makes the important information easy to scan without introducing
- * extra controls or decisions.
+ * Screen 07 — Space Details
+ * Hero image, name, status, hours, save button, occupancy bar,
+ * facilities icons, about section, "View on Campus Map" button.
  */
 export default function FacilityDetails() {
   const { id } = useParams();
@@ -46,122 +38,142 @@ export default function FacilityDetails() {
 
   if (!facility) {
     return (
-      <div className="page">
-        <Navbar />
-        <main className="container details-not-found">
-          <h1>Space not found</h1>
-          <p>We couldn't find that campus space.</p>
-          <Button to="/dashboard" variant="primary">
-            Back to Dashboard
-          </Button>
-        </main>
+      <div className="page page-with-nav">
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 32 }}>
+          <h2 style={{ fontFamily: 'var(--font-serif)', marginBottom: 12 }}>Space not found</h2>
+          <p style={{ color: 'var(--color-text-muted)', marginBottom: 24 }}>We couldn't find that campus space.</p>
+          <button type="button" className="btn-primary" onClick={() => navigate('/explore')} style={{ width: 'auto', padding: '12px 24px' }}>
+            Explore Spaces
+          </button>
+        </div>
+        <BottomNavigation />
       </div>
     );
   }
 
   const saved = isSaved(facility.id);
+  const occ = facility.occupancy;
+  const occTone = occ >= 75 ? 'high' : occ >= 40 ? 'moderate' : 'low';
+  const statusClass = facility.status === 'Open' ? 'status-open' : facility.status === 'Busy' ? 'status-busy' : 'status-closed';
 
   return (
-    <div className="page">
-      <Navbar />
-
-      <main className="details-main">
-        <div className="container details-container">
-          <button type="button" className="details-back" onClick={() => navigate(-1)}>
-            <ArrowLeft size={16} aria-hidden="true" /> Back
+    <div className="page page-with-nav">
+      <div className="details-page">
+        {/* Hero image with back + save overlays */}
+        <div className="details-hero">
+          <img
+            src={facility.image}
+            alt={facility.name}
+            className="details-hero-img"
+            onError={(e) => { e.target.src = '/campus_hero.jpg'; }}
+          />
+          <button
+            type="button"
+            className="details-back-btn"
+            onClick={() => navigate(-1)}
+            aria-label="Go back"
+          >
+            <ArrowLeft size={16} />
           </button>
+          <button
+            type="button"
+            className={`details-save-btn${saved ? ' saved' : ''}`}
+            onClick={() => toggleSaved(facility.id)}
+            aria-pressed={saved}
+            aria-label={saved ? `Remove ${facility.name} from saved` : `Save ${facility.name}`}
+          >
+            <Heart size={16} fill={saved ? 'currentColor' : 'none'} />
+          </button>
+        </div>
 
-          <header className="details-header">
-            <div className="details-heading">
-              <p className="eyebrow">Campus space</p>
-              <h1>{facility.name}</h1>
-              <p className="details-location">
-                <MapPin size={15} aria-hidden="true" />
-                {facility.location}
-              </p>
-            </div>
-            <button
-              type="button"
-              className={'save-btn save-btn-lg' + (saved ? ' save-btn-active' : '')}
-              onClick={() => toggleSaved(facility.id)}
-              aria-pressed={saved}
-              aria-label={saved ? `Remove ${facility.name} from saved spaces` : `Save ${facility.name}`}
-            >
-              <Heart size={20} fill={saved ? 'currentColor' : 'none'} aria-hidden="true" />
-            </button>
-          </header>
-
-          <section className="details-section details-status-section" aria-label="Current availability">
-            <div className="details-status-row">
-              <div>
-                <p className="details-kicker">Current status</p>
-                <div className="details-status-value">
-                  <StatusBadge status={facility.status} size="lg" />
-                  <span className="details-blurb">{facility.blurb}</span>
-                </div>
+        {/* Content */}
+        <div className="details-content">
+          {/* Name + status */}
+          <div className="details-title-row">
+            <div>
+              <h1 className="details-name">{facility.name}</h1>
+              <div className="details-location">
+                <MapPin size={12} aria-hidden="true" />
+                <span>{facility.location}</span>
               </div>
             </div>
-            <OccupancyBar occupancy={facility.occupancy} crowd={facility.crowd} />
-          </section>
+            <span className={`status-badge ${statusClass}`}>
+              <span className="status-dot" />
+              {facility.status}
+            </span>
+          </div>
 
-          <section className="details-section" aria-labelledby="details-heading">
-            <h2 id="details-heading" className="details-section-title">
-              Details
-            </h2>
-            <div className="details-grid">
-              <div className="detail-item">
-                <Clock size={18} aria-hidden="true" className="detail-item-icon" />
-                <div>
-                  <p className="detail-item-label">Opening Hours</p>
-                  <p className="detail-item-value">{facility.hours}</p>
-                </div>
-              </div>
-              <div className="detail-item">
-                <MapPin size={18} aria-hidden="true" className="detail-item-icon" />
-                <div>
-                  <p className="detail-item-label">Location</p>
-                  <p className="detail-item-value">{facility.location}</p>
-                </div>
-              </div>
+          {/* Hours */}
+          <div className="details-hours">
+            <Clock size={13} aria-hidden="true" />
+            <span>{facility.hours}</span>
+          </div>
+
+          {/* Occupancy */}
+          <div className="details-occupancy-card">
+            <div className="details-occ-row">
+              <span className="details-occ-pct">{occ}% occupied</span>
+              <span className="details-occ-desc">{getOccupancyDescription(occ)}</span>
             </div>
-          </section>
+            <div className="occ-bar-track" style={{ height: 7, marginTop: 8 }}>
+              <div
+                className={`occ-bar-fill occ-${occTone}`}
+                style={{ width: `${occ}%` }}
+                role="progressbar"
+                aria-valuenow={occ}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label={`${occ}% occupied`}
+              />
+            </div>
+            <p style={{ fontSize: '0.72rem', color: 'var(--color-text-muted)', marginTop: 6 }}>
+              Capacity: {facility.capacity} people
+            </p>
+          </div>
 
-          <section className="details-section" aria-labelledby="amenities-heading">
-            <h2 id="amenities-heading" className="details-section-title">
-              Amenities
-            </h2>
-            <ul className="amenities-grid">
+          {/* Facilities / Amenities */}
+          <section className="details-section" aria-labelledby="facilities-heading">
+            <h2 id="facilities-heading" className="details-section-title">Facilities</h2>
+            <div className="details-amenities-grid">
               {facility.amenities.map((amenity) => {
-                const Icon = AMENITY_ICONS[amenity] || Check;
+                const iconKey = facility.amenityIcons?.[amenity];
+                const Icon = ICON_MAP[iconKey] || Star;
                 return (
-                  <li key={amenity} className="amenity-item">
-                    <Icon size={17} aria-hidden="true" />
-                    <span>{amenity}</span>
-                  </li>
+                  <div key={amenity} className="details-amenity-item">
+                    <span className="details-amenity-icon" aria-hidden="true">
+                      <Icon size={16} />
+                    </span>
+                    <span className="details-amenity-label">{amenity}</span>
+                  </div>
                 );
               })}
-            </ul>
+            </div>
           </section>
 
-          <FeedbackSection facilityId={facility.id} facilityName={facility.name} />
+          {/* About */}
+          <section className="details-section" aria-labelledby="about-heading">
+            <h2 id="about-heading" className="details-section-title">About this space</h2>
+            <p className="details-about-text">{facility.about}</p>
+          </section>
 
-          <p className="demo-note details-demo-note">
-            Occupancy and status are demo data for this UI/UX project.
+          {/* Map CTA */}
+          <button
+            type="button"
+            className="btn-primary"
+            onClick={() => navigate(`/map?highlight=${facility.id}`)}
+            style={{ marginTop: 8 }}
+          >
+            <Map size={16} aria-hidden="true" />
+            View on Campus Map
+          </button>
+
+          <p className="details-demo-note">
+            Occupancy is illustrative demo data for this UI/UX project.
           </p>
-
-          <div className="details-actions">
-            <Button
-              as="button"
-              variant={saved ? 'secondary' : 'primary'}
-              size="lg"
-              icon={Heart}
-              onClick={() => toggleSaved(facility.id)}
-            >
-              {saved ? 'Saved' : 'Save space'}
-            </Button>
-          </div>
         </div>
-      </main>
+      </div>
+
+      <BottomNavigation />
     </div>
   );
 }

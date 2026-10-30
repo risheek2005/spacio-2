@@ -1,95 +1,146 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import SearchBar from '../components/SearchBar';
-import FacilityCard from '../components/FacilityCard';
+import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Bell, Search, SlidersHorizontal, ChevronRight, Dumbbell, BookOpen, BookMarked, FlaskConical, Mic, MoreHorizontal } from 'lucide-react';
+import SpacioLogo from '../components/SpacioLogo';
+import BottomNavigation from '../components/BottomNavigation';
+import SpaceCard from '../components/SpaceCard';
 import { useApp } from '../context/AppContext';
 import { FACILITIES } from '../data/facilities';
 import './Dashboard.css';
 
 function getGreeting() {
-  const hour = new Date().getHours();
-  if (hour < 12) return 'Good morning';
-  if (hour < 17) return 'Good afternoon';
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 17) return 'Good afternoon';
   return 'Good evening';
 }
 
+const CATEGORIES = [
+  { label: 'Gym',        icon: Dumbbell,      id: 'Gym' },
+  { label: 'Library',    icon: BookOpen,       id: 'Library' },
+  { label: 'Study Room', icon: BookMarked,     id: 'Study Room' },
+  { label: 'Labs',       icon: FlaskConical,   id: 'Labs' },
+  { label: 'Auditorium', icon: Mic,            id: 'Auditorium' },
+  { label: 'Other',      icon: MoreHorizontal, id: 'Other' },
+];
+
 /**
- * The dashboard is deliberately focused on the two decisions Spacio asks
- * the user to make: find Library or Gym, then check its current condition.
- * This keeps the most useful information visible without adding filters,
- * charts or extra categories.
+ * Screen 04 — Home Page
+ * Greeting, search bar, category grid, "Around you" space cards.
  */
 export default function Dashboard() {
   const { user } = useApp();
-  const location = useLocation();
   const [query, setQuery] = useState('');
-  const searchRef = useRef(null);
-
-  useEffect(() => {
-    if (location.search.includes('explore')) {
-      searchRef.current?.focus();
-      searchRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-  }, [location.search]);
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return FACILITIES;
-    return FACILITIES.filter(
-      (facility) =>
-        facility.name.toLowerCase().includes(q) ||
-        facility.location.toLowerCase().includes(q)
-    );
-  }, [query]);
+  const [activeCategory, setActiveCategory] = useState(null);
 
   const firstName = user?.name?.split(' ')[0] || 'there';
 
+  const nearby = useMemo(() => {
+    let results = FACILITIES;
+    if (activeCategory) {
+      results = results.filter((f) => f.category === activeCategory);
+    }
+    if (query.trim()) {
+      const q = query.toLowerCase();
+      results = results.filter(
+        (f) =>
+          f.name.toLowerCase().includes(q) ||
+          f.location.toLowerCase().includes(q) ||
+          f.category.toLowerCase().includes(q)
+      );
+    }
+    return results;
+  }, [query, activeCategory]);
+
   return (
-    <div className="page dashboard">
-      <Navbar />
+    <div className="page page-with-nav">
+      <div className="dashboard-page">
+        {/* Top bar */}
+        <header className="dashboard-topbar">
+          <SpacioLogo to="/dashboard" size="sm" />
+          <button className="notif-btn" aria-label="Notifications">
+            <Bell size={19} />
+            <span className="notif-dot" aria-hidden="true" />
+          </button>
+        </header>
 
-      <main className="dashboard-main" id="dashboard-main-content">
-        <div className="container dashboard-container">
-          <section className="dashboard-greeting">
-            <p className="eyebrow">Campus spaces</p>
-            <h1>
-              {getGreeting()}, {firstName} 👋
-            </h1>
-            <p>Find the right space for you.</p>
-          </section>
+        {/* Greeting */}
+        <section className="dashboard-greeting" aria-label="Greeting">
+          <p className="text-eyebrow">YOUR CAMPUS, YOUR PACE</p>
+          <h1 className="dashboard-greeting-title">
+            {getGreeting()},&nbsp;{firstName}
+          </h1>
+        </section>
 
-          <section className="dashboard-search" aria-label="Search campus spaces">
-            <SearchBar value={query} onChange={setQuery} inputRef={searchRef} />
-          </section>
-
-          <section className="dashboard-spaces" aria-labelledby="spaces-heading">
-            <div className="dashboard-spaces-heading">
-              <div>
-                <h2 id="spaces-heading" className="dashboard-spaces-title">
-                  Campus Spaces
-                </h2>
-                <p className="dashboard-spaces-subtitle">
-                  {filtered.length === 2 ? '2 spaces available' : `${filtered.length} space${filtered.length === 1 ? '' : 's'} found`}
-                </p>
-              </div>
-              <p className="demo-note">Demo availability</p>
-            </div>
-
-            {filtered.length === 0 ? (
-              <p className="dashboard-empty" role="status">
-                No spaces match “{query}”. Try “library” or “gym”.
-              </p>
-            ) : (
-              <div className="facility-grid">
-                {filtered.map((facility) => (
-                  <FacilityCard key={facility.id} facility={facility} />
-                ))}
-              </div>
-            )}
-          </section>
+        {/* Search */}
+        <div className="dashboard-search">
+          <div className="search-bar" role="search">
+            <Search size={16} className="search-icon" aria-hidden="true" />
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search campus spaces"
+              aria-label="Search campus spaces"
+            />
+            <Link to="/explore" className="filter-btn" aria-label="Advanced filters">
+              <SlidersHorizontal size={14} />
+            </Link>
+          </div>
         </div>
-      </main>
+
+        {/* Find your space — category grid */}
+        <section className="dashboard-section" aria-labelledby="cats-heading">
+          <h2 id="cats-heading" className="dashboard-section-title">Find your space</h2>
+          <div className="category-grid">
+            {CATEGORIES.map(({ label, icon: Icon, id }) => (
+              <button
+                key={id}
+                type="button"
+                className={`category-card${activeCategory === id ? ' active' : ''}`}
+                onClick={() => setActiveCategory(activeCategory === id ? null : id)}
+                aria-pressed={activeCategory === id}
+              >
+                <span className="category-card-icon" aria-hidden="true">
+                  <Icon size={20} />
+                </span>
+                <span className="category-card-label">{label}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {/* Around you */}
+        <section className="dashboard-section" aria-labelledby="nearby-heading">
+          <div className="dashboard-section-header">
+            <h2 id="nearby-heading" className="dashboard-section-title">Around you</h2>
+            <Link to="/explore" className="explore-all-link">
+              Explore all <ChevronRight size={14} />
+            </Link>
+          </div>
+
+          {nearby.length === 0 ? (
+            <div className="empty-state">
+              <p>No spaces match your search.</p>
+              <button
+                type="button"
+                className="btn-ghost"
+                onClick={() => { setQuery(''); setActiveCategory(null); }}
+              >
+                Clear filters
+              </button>
+            </div>
+          ) : (
+            <div className="dashboard-spaces-list">
+              {nearby.map((f) => (
+                <SpaceCard key={f.id} facility={f} />
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
+
+      <BottomNavigation />
     </div>
   );
 }

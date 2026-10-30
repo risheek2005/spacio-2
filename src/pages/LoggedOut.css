@@ -1,0 +1,71 @@
+/* ── Logged Out ── */
+
+.loggedout-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--sp-6) var(--page-pad) var(--sp-10);
+  max-width: var(--container-max);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.loggedout-brand {
+  margin-bottom: var(--sp-5);
+}
+
+.loggedout-img-wrap {
+  width: 100%;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  aspect-ratio: 4/3;
+  max-height: 240px;
+  box-shadow: var(--shadow-md);
+  margin-bottom: var(--sp-6);
+}
+.loggedout-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.loggedout-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  gap: var(--sp-3);
+}
+
+.loggedout-success-icon {
+  display: flex; align-items: center; justify-content: center;
+  width: 56px; height: 56px;
+  background: var(--color-sage-pale);
+  border-radius: 50%;
+  color: var(--color-primary);
+  margin-bottom: var(--sp-1);
+}
+
+.loggedout-title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+.loggedout-desc {
+  font-size: 0.88rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.loggedout-note {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--sp-2);
+}
